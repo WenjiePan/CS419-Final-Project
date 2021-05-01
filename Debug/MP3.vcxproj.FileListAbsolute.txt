@@ -1,0 +1,2 @@
+D:\UIUC\CS 419\MP3\Debug\MP3.exe
+D:\UIUC\CS 419\MP3\Debug\MP3.pdb

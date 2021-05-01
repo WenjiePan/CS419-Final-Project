@@ -1,0 +1,5 @@
+﻿  main.cpp
+D:\UIUC\CS 419\MP3\bvh.h(68,31): warning C4018: '<': signed/unsigned mismatch
+D:\UIUC\CS 419\MP3\obj.h(72,22): warning C4018: '<': signed/unsigned mismatch
+D:\UIUC\CS 419\MP3\bvh.h(104): warning C4715: '<lambda_c0372af8b6c8a03b81767c0010c3a646>::operator()': not all control paths return a value
+  MP3.vcxproj -> D:\UIUC\CS 419\MP3\Debug\MP3.exe
