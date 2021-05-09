@@ -28,6 +28,7 @@ private:
     color color_value;
 };
 
+// Checker texture where the checker exists in 3D space
 class checker_3d : public texture {
 public:
     checker_3d() {}
@@ -36,6 +37,7 @@ public:
 
     virtual color value(double u, double v, const vec3& p) const override {
         double eps = 0.000001;
+        // Use hit point position to determine output
         if (((int) (floor(p.x() + eps) + floor(p.y() + eps) + floor(p.z() + eps))) % 2) {
             return col1;
         } else {
@@ -50,11 +52,13 @@ private:
     color col2 = color(1,1,1);
 };
 
+// Striped texture where the stripes are on the sphere's surface
 class striped_sphere : public texture {
 public:
     striped_sphere() {}
     striped_sphere(int s, color c1, color c2) : stripecount(s), col1(c1), col2(c2) {}
 
+    // Use angle from vertical axis to determine output
     virtual color value(double u, double v, const vec3& p) const override {
         if ((int) (v * stripecount) % 2) {
             return col1;
@@ -70,11 +74,13 @@ private:
     color col2 = color(1, 1, 1);
 };
 
+// Checker texture where the stripes are on the sphere's surface
 class checkered_sphere : public texture {
 public:
     checkered_sphere() {}
     checkered_sphere(int s, color c1, color c2) : stripecount(s), col1(c1), col2(c2) {}
 
+    // Use angular position on the sphere to determine output
     virtual color value(double u, double v, const vec3& p) const override {
         if (((int)(v * stripecount) + (int)(u * stripecount)) % 2) {
             return col1;
@@ -90,13 +96,14 @@ private:
     color col2 = color(1, 1, 1);
 };
 
-// Uses perlin noise to create a texture based on position.
+// Uses Perlin noise to create a "meat" texture based on position.
 class perlin_meat : public texture {
 public:
     perlin_meat() {}
 
     virtual color value(double u, double v, const vec3& p) const override {
         double perlinval = ImprovedNoise::noise(p.x(), p.y(), p.z());
+        // Use value from Perlin noise and then linearly interpolate from color ramp
 
         if (perlinval < t0) {
             return c0;
