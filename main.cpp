@@ -79,6 +79,28 @@ void area_light(hittable_list& world) {
     world.add(make_shared<xy_rect>(-5, 5, 0, 10, -25, difflight));
 }
 
+void proctex_scene(hittable_list& world) {
+    auto texture_checker = make_shared<checker_3d>();
+    auto material_checker = make_shared<lambertian>(texture_checker);
+
+    auto texture_checker2 = make_shared<checkered_sphere>();
+    auto material_checker2 = make_shared<lambertian>(texture_checker2);
+
+    auto texture_striped = make_shared<striped_sphere>();
+    auto material_striped = make_shared<lambertian>(texture_striped);
+
+    auto texture_perlin = make_shared<perlin_meat>();
+    auto material_perlin = make_shared<lambertian>(texture_perlin);
+
+    world.add(make_shared<sphere>(point3(-9, 0.0, -10), 2.5, material_checker));
+    world.add(make_shared<sphere>(point3(-3, 0.0, -10), 2.5, material_striped));
+    world.add(make_shared<sphere>(point3(9, 0.0, -10), 2.5, material_checker2));
+    world.add(make_shared<sphere>(point3(3, 0.0, -10), 2.5, material_perlin));
+
+    auto difflight = make_shared<diffuse_light>(color(15, 15, 15));
+    world.add(make_shared<xy_rect>(-5, 5, 0, 10, 2, difflight));
+}
+
 int main() {
     // Image
     const int image_width = 400;
@@ -125,7 +147,10 @@ int main() {
     //world.add(make_shared<sphere>(point3(0.8, -0.3, -1.4), -(0.4 * transparency_inner), material_sphere2));
 
     // Create a area light scene
-    area_light(world);
+    //area_light(world);
+    
+    // Create a scene to demonstrate procedural textures
+    proctex_scene(world);
 
     // Camera
     camera cam(point3(0, 0, 0), point3(0, 0, -1), vec3(0, 1, 0));
