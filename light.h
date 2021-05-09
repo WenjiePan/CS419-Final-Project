@@ -3,49 +3,79 @@
 
 #include "hittable.h"
 #include "material.h"
+#include "ray.h"
 #include "vec3.h"
+
+inline vec3 random_in_unit_hemisphere(int axis, int posFlag) {
+	double x, y, z;
+	if (axis == 0) {
+		while (true) {
+			x = posFlag ? random_double(0, 1) : random_double(-1, 0);
+			y = random_double(-1, 1);
+			z = random_double(-1, 1);
+			if (x * x + y * y + z * z > 1) continue;
+			return unit_vector(vec3(x, y, z));
+		}	
+	}
+	else if (axis == 1) {
+		while (true) {
+			x = random_double(-1, 1);
+			y = posFlag ? random_double(0, 1) : random_double(-1, 0);
+			z = random_double(-1, 1);
+			if (x * x + y * y + z * z > 1) continue;
+			return unit_vector(vec3(x, y, z));
+		}
+	}
+	else if (axis == 2) {
+		while (true) {
+			x = random_double(-1, 1);
+			y = random_double(-1, 1);
+			z = posFlag ? random_double(0, 1) : random_double(-1, 0);
+			if (x * x + y * y + z * z > 1) continue;
+			return unit_vector(vec3(x, y, z));
+		}
+	}
+}
+
 
 // Class for light source. It intialize parallel point light and compute phong shading
 class light {
-	private:
-		point3 lightPos;
-		color lightColor;
-		const double ambientStrength = 0.2;
-		const double specularStrength = 0.5;
-
 	public:
-		light() : lightPos(point3(0, 0, 0)), lightColor(color(1.0, 1.0, 1.0)) {}
-		light(point3 pos, color col) {
-			lightPos = pos;
-			lightColor = col;
-		}
-
-		// Get color on 1 pixel with phong shading model
-		color phong_shading(const hit_record& rec, hittable_list world, const ray& r) {
-			color objectColor = rec.mat_ptr->getColor();
-			vec3 unit_normal = unit_vector(rec.normal);
-			if (!rec.front_face) {
-				unit_normal *= -1;
-			}
-			vec3 unit_lightDir = unit_vector(lightPos - rec.p);
-			ray shadow_ray = ray(rec.p, lightPos - rec.p);
-			
-			// Ambient
-			color ambientColor = (ambientStrength * lightColor) * objectColor;
-
-			// Diffuse
-			double nl_dot = std::max(dot(unit_normal, unit_lightDir), 0.0);
-			color diffuseColor = nl_dot * lightColor * objectColor;
-
-			// Specular
-			vec3 unit_view = unit_vector(r.origin() - rec.p);
-			vec3 unit_reflectDir = 2 * dot(unit_lightDir, unit_normal) * unit_normal - unit_lightDir;
-			double rv_dot = std::max(dot(unit_reflectDir, unit_view), 0.0);
-			color specularColor = pow(rv_dot, 32) * specularStrength * objectColor;
-
-			// If object is in shadow, only return ambient light, otherwise return the sum of all lights
-			return ambientColor + ((world.shadow_hit(shadow_ray)) ? (vec3(0, 0, 0) + diffuseColor + specularColor) / 3.0 : diffuseColor + specularColor);
-		}
+		virtual point3 getPos() const = 0;
+		virtual color getLightColor() const = 0;
+		virtual ray randomLightRay() const = 0;
 };
 
+class xz_rect_light : public light {
+	public:
+		vec3 lightPos;
+		color lightColor;
+		float x_len;
+		float z_len;
+		vec3 outward_norm;
+
+	public:
+		xz_rect_light() {}
+		xz_rect_light(vec3 p, vec3 c, float x, float z, vec3 n) {
+			lightPos = p;
+			lightColor = c;
+			x_len = x;
+			z_len = z;
+			outward_norm = n;
+		}
+
+		point3 getPos() const override { return lightPos; }
+		color getLightColor() const override { return lightColor; }
+
+		float getX_Len() { return x_len; }
+		float getZ_Len() { return z_len; }
+
+		ray randomLightRay() const override {
+			vec3 rdnPos = vec3(random_double(lightPos.x() - x_len / 2, lightPos.x() + x_len / 2),
+								lightPos.y(), 
+								random_double(lightPos.z() - z_len / 2, lightPos.z() + z_len / 2));
+			vec3 rdnDir = random_in_unit_hemisphere(1, outward_norm[1] > 0);
+			return ray(rdnPos, rdnDir);
+		}
+};
 #endif

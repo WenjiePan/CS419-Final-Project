@@ -12,7 +12,10 @@ class aabb {
         point3 centroid;
 
 	public:
-		aabb() {}
+		aabb() {
+            minimum = point3(infinity, infinity, infinity);
+            maximum = point3(-infinity, -infinity, -infinity);
+        }
 		aabb(const point3& a, const point3& b)
 			: minimum(a), maximum(b) 
 		{
@@ -23,6 +26,22 @@ class aabb {
 		point3 max() const { return maximum; }
         point3 cen() const { return centroid; }
         bool hit(const ray& r, double t_min, double t_max) const;
+
+        void fit(const point3& p) {
+            minimum.e[0] = std::min(minimum.x(), p.x());
+            minimum.e[1] = std::min(minimum.y(), p.y());
+            minimum.e[2] = std::min(minimum.z(), p.z());
+            maximum.e[0] = std::max(maximum.x(), p.x());
+            maximum.e[1] = std::max(maximum.y(), p.y());
+            maximum.e[2] = std::max(maximum.z(), p.z());
+        }
+        int sepAxis() const {
+            vec3 sepDiff = maximum - minimum;
+            double maxDiff = std::max({ sepDiff.x(), sepDiff.y(), sepDiff.z() });
+            if (maxDiff == sepDiff.x()) { return 0; }
+            else if (maxDiff == sepDiff.y()) { return 1; }
+            else if (maxDiff == sepDiff.z()) { return 2; }
+        }
 };
 
 // Check if the ray hit the bounding box by computing t_next in 3 axis

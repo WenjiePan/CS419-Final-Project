@@ -19,6 +19,14 @@ class ray {
 		point3 origin() const { return orig; }
 		vec3 direction() const { return dir; }
 
+		void setOrigin(point3 origin) {
+			orig = origin;
+		}
+
+		void setDirection(vec3 direction) {
+			dir = direction;
+		}
+
 		// Return the point of ray hit given t
 		point3 at(double t) const {
 			return orig + t * dir;

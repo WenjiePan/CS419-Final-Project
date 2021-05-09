@@ -2,6 +2,7 @@
 #define AARECT_H
 
 #include "hittable.h"
+#include "material.h"
 #include "utility.h"
 
 // Class for rectangle hittable object in xy, yz, zx coordinates
@@ -22,6 +23,8 @@ class xy_rect : public hittable {
             output_box = aabb(point3(x0, y0, k - 0.0001), point3(x1, y1, k + 0.0001));
             return true;
         }
+
+        virtual std::string getMatName() const override;
 
     public:
         shared_ptr<material> mp;
@@ -45,6 +48,8 @@ class xz_rect : public hittable {
             return true;
         }
 
+        virtual std::string getMatName() const override;
+
     public:
         shared_ptr<material> mp;
         double x0, x1, z0, z1, k;
@@ -66,6 +71,8 @@ class yz_rect : public hittable {
             output_box = aabb(point3(k - 0.0001, y0, z0), point3(k + 0.0001, y1, z1));
             return true;
         }
+
+        virtual std::string getMatName() const override;
 
     public:
         shared_ptr<material> mp;
@@ -124,6 +131,18 @@ bool yz_rect::hit(const ray& r, double t_min, double t_max, hit_record& rec) con
     rec.mat_ptr = mp;
     rec.p = r.at(t);
     return true;
+}
+
+std::string xy_rect::getMatName() const {
+    return mp->getMatName();
+}
+
+std::string xz_rect::getMatName() const {
+    return mp->getMatName();
+}
+
+std::string yz_rect::getMatName() const {
+    return mp->getMatName();
 }
 
 #endif

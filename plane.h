@@ -18,6 +18,7 @@ class plane : public hittable {
 		virtual bool hit(
 			const ray& r, double t_min, double t_max, hit_record& rec) const override;
 		virtual bool bounding_box(double time0, double time1, aabb& output_box) const override;
+		virtual std::string getMatName() const override;
 };
 
 // Check if ray hit the plane
@@ -49,6 +50,10 @@ bool plane::bounding_box(double time0, double time1, aabb& output_box) const {
 	aabb* output_box_addr = &output_box;
 	output_box_addr = NULL;
 	return false;
+}
+
+std::string plane::getMatName() const {
+	return mat_ptr->getMatName();
 }
 
 #endif

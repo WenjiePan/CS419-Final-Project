@@ -3,6 +3,8 @@
 
 #include "utility.h"
 
+#include <cmath>
+
 // Class for camera. It determine the origin and look direction of camera to control ray direction
 class camera {
 	private:
@@ -16,8 +18,8 @@ class camera {
     public:
         // Construct camera coordinate based on eye point, lookat direction and lookup direction
         camera(point3 lookfrom, point3 lookat, vec3 vup) {
-            auto viewport_height = 2.0;
-            auto viewport_width = 2.0;
+            auto viewport_height = 1.0;
+            auto viewport_width = 1.0;
             auto focal_length = 1.0;
 
             auto w = unit_vector(lookfrom - lookat);
@@ -32,7 +34,9 @@ class camera {
 
         // Get perspective ray given the point on viewport
         ray get_ray(double s, double t) const {
-            return ray(origin, lower_left_corner + s * horizontal + t * vertical - origin);
+            vec3 direction = lower_left_corner + s * horizontal + t * vertical - origin;
+            direction /= abs(direction.z());
+            return ray(origin, direction);
         }
 
         // Get orthographic ray given the point on viewport

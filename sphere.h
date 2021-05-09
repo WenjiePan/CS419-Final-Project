@@ -19,6 +19,7 @@ class sphere : public hittable {
 		virtual bool hit(
 			const ray& r, double t_min, double t_max, hit_record& rec) const override;
 		virtual bool bounding_box(double time0, double time1, aabb& output_box) const override;
+		virtual std::string getMatName() const override;
 
 	private:
 		static void get_sphere_uv(const point3& p, double& u, double& v) {
@@ -72,6 +73,10 @@ bool sphere::bounding_box(double time0, double time1, aabb& output_box) const {
 		center - vec3(radius, radius, radius),
 		center + vec3(radius, radius, radius));
 	return true;
+}
+
+std::string sphere::getMatName() const {
+	return mat_ptr->getMatName();
 }
 
 #endif

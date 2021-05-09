@@ -29,6 +29,8 @@ class hittable_list : public hittable {
 		virtual bool bounding_box(
 			double time0, double time1, aabb& output_box) const override;
 
+		virtual std::string getMatName() const override;
+
 		bool shadow_hit(const ray& r);
 };
 
@@ -65,6 +67,10 @@ bool hittable_list::bounding_box(double time0, double time1, aabb& output_box) c
 	}
 
 	return true;
+}
+
+std::string hittable_list::getMatName() const {
+	return "";
 }
 
 // Check if shadow ray hit any object
