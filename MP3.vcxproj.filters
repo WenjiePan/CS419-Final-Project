@@ -71,5 +71,11 @@
     <ClInclude Include="aarect.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="rtw_stb_image.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="external\stb_image.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
