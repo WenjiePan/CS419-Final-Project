@@ -151,6 +151,7 @@
     <ClInclude Include="hittable_list.h" />
     <ClInclude Include="jitter.h" />
     <ClInclude Include="material.h" />
+    <ClInclude Include="moving_sphere.h" />
     <ClInclude Include="obj.h" />
     <ClInclude Include="plane.h" />
     <ClInclude Include="ray.h" />

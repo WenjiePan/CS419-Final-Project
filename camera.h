@@ -12,10 +12,11 @@ class camera {
         vec3 horizontal;
         vec3 vertical;
         vec3 cam_dir;
+        double time0, time1;  // shutter open/close times
 
     public:
         // Construct camera coordinate based on eye point, lookat direction and lookup direction
-        camera(point3 lookfrom, point3 lookat, vec3 vup) {
+        camera(point3 lookfrom, point3 lookat, vec3 vup, double _time0 = 0, double _time1 = 0) {
             auto viewport_height = 2.0;
             auto viewport_width = 2.0;
             auto focal_length = 1.0;
@@ -28,11 +29,13 @@ class camera {
             horizontal = viewport_width * u;
             vertical = viewport_height * v;
             lower_left_corner = origin - horizontal / 2 - vertical / 2 - w;
+            time0 = _time0;
+            time1 = _time1;
         }
 
         // Get perspective ray given the point on viewport
         ray get_ray(double s, double t) const {
-            return ray(origin, lower_left_corner + s * horizontal + t * vertical - origin);
+            return ray(origin, lower_left_corner + s * horizontal + t * vertical - origin, random_double(time0, time1));
         }
 
         // Get orthographic ray given the point on viewport
